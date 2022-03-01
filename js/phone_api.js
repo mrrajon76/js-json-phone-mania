@@ -12,8 +12,7 @@ const showResults = resultDatabase => {
 };
 
 const loadDetails = idValue => {
-    const container = document.getElementById('detailsContainer');
-    container.style.display = 'none';
+    // document.getElementById('detailsContainer').style.display = "none";
     fetch(`https://openapi.programming-hero.com/api/phone/${idValue}`)
         .then(response => response.json())
         .then(value => showDetails(value.data))
@@ -22,13 +21,14 @@ const loadDetails = idValue => {
 const showDetails = value => {
     console.log(value);
     const container = document.getElementById('detailsContainer');
+    container.textContent = "";
     const rowDiv = document.createElement('div');
     rowDiv.classList.add('row', 'g-0');
     rowDiv.innerHTML = `
-        <div class="col-md-4 bg-light p-3 d-flex justify-content-center">
+        <div class="col-md-3 bg-light p-3 d-flex justify-content-center">
             <img src="${value.image}" class="img-fluid" alt="...">
         </div>
-        <div class="col-md-8 p-3">
+        <div class="col-md-9 p-3">
             <div class="card-body">
                 <h4 class="card-title">${value.name}</h4>
                 <p class="card-text">
