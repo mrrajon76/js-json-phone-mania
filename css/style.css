@@ -6,7 +6,7 @@ body {
   font-family: "Poppins", sans-serif;
 }
 .main-body {
-  background-color: #eafeff;
+  background-color: #effeff;
   min-height: 76vh;
 }
 .bg-brand,
@@ -20,4 +20,7 @@ body {
 .btn-brand:hover {
   background-color: #232323;
   color: #ffffff;
+}
+#detailsContainer {
+  display: none;
 }
