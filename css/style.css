@@ -5,13 +5,14 @@
 body {
   font-family: "Poppins", sans-serif;
 }
+.main-body {
+  background-color: #eafeff;
+  min-height: 76vh;
+}
 .bg-brand,
 .btn-brand {
   background-color: #ff8800;
   color: #ffffff;
-}
-.bg-brand-lite {
-  background-color: #eafeff;
 }
 .brand-text {
   color: #ff8800;
