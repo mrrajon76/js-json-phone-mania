@@ -19,16 +19,17 @@ const loadDetails = idValue => {
 };
 
 const showDetails = value => {
-    console.log(value);
     const container = document.getElementById('detailsContainer');
     container.textContent = "";
+    const sensors = value.mainFeatures.sensors.join(', ');
+    console.log(sensors);
     const rowDiv = document.createElement('div');
     rowDiv.classList.add('row', 'g-0');
     rowDiv.innerHTML = `
-        <div class="col-md-3 bg-light p-3 d-flex justify-content-center">
-            <img src="${value.image}" class="img-fluid" alt="...">
+        <div class="col-md-4 bg-light p-3 d-flex justify-content-center">
+            <img src="${value.image}" class="img-fluid" alt="Phone image">
         </div>
-        <div class="col-md-9 p-3">
+        <div class="col-md-8 p-3">
             <div class="card-body">
                 <h4 class="card-title">${value.name}</h4>
                 <p class="card-text">
@@ -41,10 +42,6 @@ const showDetails = value => {
                             <td>${value.brand}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Storage:</th>
-                            <td>${value.mainFeatures.storage}</td>
-                        </tr>
-                        <tr>
                             <th scope="row">Display Size:</th>
                             <td>${value.mainFeatures.displaySize}</td>
                         </tr>
@@ -53,17 +50,27 @@ const showDetails = value => {
                             <td>${value.mainFeatures.chipSet}</td>
                         </tr>
                         <tr>
+                            <th scope="row">Storage:</th>
+                            <td>${value.mainFeatures.storage}</td>
+                        </tr>
+                        <tr>
                             <th scope="row">Memory:</th>
                             <td>${value.mainFeatures.memory}</td>
                         </tr>
+                        <tr>
+                            <th scope="row">Sensors:</th>
+                            <td>${sensors}</td>
+                        </tr>
                     </tbody>
-                    </table>
+                </table>
             </div>
         </div>
     `;
     container.appendChild(rowDiv);
     container.style.display = 'block';
+    window.scroll({ top: 0, left: 0 });
 };
+
 
 const createResultCard = value => {
     const container = document.getElementById('resultContainer');
@@ -75,7 +82,7 @@ const createResultCard = value => {
             </div>
             <div class="card-body text-center py-4">
                 <h4 class="card-title">${value.phone_name}</h4>
-                <button class="btn btn-dark mt-2" onclick="loadDetails('${value.slug}')">Explore</button>
+                <a class="btn btn-dark mt-2" onclick="loadDetails('${value.slug}')">Explore</a>
             </div>
             <div class="card-footer bg-brand text-center border-0">
                 <h6 class="card-title">Brand: ${value.brand}</h6>
