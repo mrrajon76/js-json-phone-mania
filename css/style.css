@@ -5,6 +5,18 @@
 body {
   font-family: "Poppins", sans-serif;
 }
-.bg-brand {
+.bg-brand,
+.btn-brand {
   background-color: #ff8800;
+  color: #ffffff;
+}
+.bg-brand-lite {
+  background-color: #eafeff;
+}
+.brand-text {
+  color: #ff8800;
+}
+.btn-brand:hover {
+  background-color: #232323;
+  color: #ffffff;
 }
