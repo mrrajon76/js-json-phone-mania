@@ -100,26 +100,27 @@ const showDetails = value => {
     `;
     tBody.appendChild(sensorRow);
 
+    // check existance of phone other information 
+    if (value.others) {
+        // show phone other information depends on object length
+        Object.keys(value.others).forEach(objKey => {
+            const tblRow = document.createElement('tr');
 
-    // show phone other information depends on object length
-    Object.keys(value.others).forEach(objKey => {
-        const tblRow = document.createElement('tr');
+            const tblHeader = document.createElement('th');
+            const thValue = document.createTextNode(`${objKey}:`);
 
-        const tblHeader = document.createElement('th');
-        const thValue = document.createTextNode(`${objKey}:`);
+            const tblData = document.createElement('td');
+            const tdValue = document.createTextNode(`${value.others[objKey]}`);
 
-        const tblData = document.createElement('td');
-        const tdValue = document.createTextNode(`${value.others[objKey]}`);
+            tblData.appendChild(tdValue);
+            tblHeader.appendChild(thValue);
 
-        tblData.appendChild(tdValue);
-        tblHeader.appendChild(thValue);
+            tblRow.appendChild(tblHeader);
+            tblRow.appendChild(tblData);
 
-        tblRow.appendChild(tblHeader);
-        tblRow.appendChild(tblData);
-
-        tBody.appendChild(tblRow);
-    });
-
+            tBody.appendChild(tblRow);
+        });
+    }
 
     otherInfoTable.appendChild(tBody);
     cardBody.appendChild(otherInfoTable);
