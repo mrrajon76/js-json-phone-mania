@@ -14,22 +14,30 @@ const getResult = searchKeyword => {
 const showResults = resultDatabase => {
     // check search results is empty or not
     if (resultDatabase.length != 0) {
-        // hide search result error message before showing the results
-        document.getElementById('noResultsErrorMessage').style.display = "none";
+        // hide search-result error message before showing the results
+        triggerError('noResultsErrorMessage', false);
 
-        // hide phone details container for every search
-        document.getElementById('detailsContainer').style.display = "none";
+        // clear & hide phone details container for every search
+        clearPreviousData('detailsContainer', false);
 
         // clear previous search results before displaying new search result
-        document.getElementById('resultContainer').textContent = "";
+        clearPreviousData('resultContainer', true);
 
         // show only first twenty search results
         const twentyResults = resultDatabase.slice(0, 20);
+
+        // create & show search result cards
         twentyResults.forEach(createResultCard);
     }
     // activate search result error message
     else {
-        document.getElementById('noResultsErrorMessage').style.display = "block";
+        // trigger search-result error message
+        triggerError('noResultsErrorMessage', true);
+
+        // clear & hide phone details container if got error
+        clearPreviousData('detailsContainer', false);
+        // clear & hide search result card container if got error
+        clearPreviousData('resultContainer', true);
     }
 
 };
@@ -38,8 +46,7 @@ const showResults = resultDatabase => {
 // function fetch phone details
 const loadDetails = idValue => {
     // clear previous phone details before showing new one
-    document.getElementById('detailsContainer').textContent = '';
-    document.getElementById('detailsContainer').style.display = "none";
+    clearPreviousData('detailsContainer', true);
 
     // fetch phone details from API
     fetch(`https://openapi.programming-hero.com/api/phone/${idValue}`)
@@ -64,7 +71,7 @@ const createResultCard = value => {
             </div>
             <div class="card-body text-center py-4">
                 <h4 class="card-title fw-bold">${value.phone_name}</h4>
-                <a class="btn btn-dark mt-2" onclick="loadDetails('${value.slug}')">Explore</a>
+                <a class="btn btn-brand mt-2" onclick="loadDetails('${value.slug}')">Explore</a>
             </div>
             <div class="card-footer bg-brand text-center border-0">
                 <h6 class="card-title">Brand: ${value.brand}</h6>
@@ -223,17 +230,59 @@ const createSensorsRow = phoneValue => {
 }
 
 
+// function for clearing previous data before showing new one
+const clearPreviousData = (containerId, isText) => {
+    // clear only elements of the container
+    if (isText === true) {
+        document.getElementById(containerId).textContent = '';
+        return;
+    }
+    // clear elements and hide container
+    else {
+        document.getElementById(containerId).textContent = '';
+        document.getElementById(containerId).style.display = "none";
+        return;
+    }
+}
+
+
+// function for triggering error messages
+const triggerError = (errorMsgId, display) => {
+    // show error message
+    if (display === true) {
+        document.getElementById(errorMsgId).style.display = "block";
+        return;
+    }
+    // hide error message
+    else {
+        document.getElementById(errorMsgId).style.display = "none";
+        return;
+    }
+}
+
+
 // get search box input
 document.getElementById('searchBtn').addEventListener('click', function () {
     const searchKeyword = document.getElementById('searchField').value;
     // fetch data only when search box has a value 
     if (searchKeyword) {
-        document.getElementById('errorMessage').style.display = "none";
+        // hide error message
+        triggerError('errorMessage', false);
+
+        // fetch data using search keyword
         getResult(searchKeyword);
     }
 
     // show an error message if the search box is empty
     else {
-        document.getElementById('errorMessage').style.display = "block";
+        // trigger erro message
+        triggerError('errorMessage', true);
+        // hide search-result error message
+        triggerError('noResultsErrorMessage', false);
+
+        // clear previous phone details
+        clearPreviousData('detailsContainer', false);
+        // clear previous search results
+        clearPreviousData('resultContainer', true);
     }
 });
