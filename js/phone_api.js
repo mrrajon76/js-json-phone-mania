@@ -1,4 +1,4 @@
-// fetch search results
+// function to fetch search results
 const getResult = searchKeyword => {
     // clear search box
     document.getElementById('searchField').value = "";
@@ -9,7 +9,8 @@ const getResult = searchKeyword => {
         .then(values => showResults(values.data))
 };
 
-// show search results
+
+// function to show search results
 const showResults = resultDatabase => {
     // check search results is empty or not
     if (resultDatabase.length != 0) {
@@ -33,7 +34,8 @@ const showResults = resultDatabase => {
 
 };
 
-// fetch phone details
+
+// function fetch phone details
 const loadDetails = idValue => {
     // clear previous phone details before showing new one
     document.getElementById('detailsContainer').textContent = '';
@@ -45,13 +47,45 @@ const loadDetails = idValue => {
         .then(value => showDetails(value.data))
 };
 
-// show phone details
+
+// function to create search result cards
+const createResultCard = value => {
+    // create result cards container
+    const container = document.getElementById('resultContainer');
+
+    // create card column
+    const colDiv = document.createElement('div');
+
+    // create card
+    colDiv.innerHTML = `
+        <div class="card h-100 shadow border-0 rounded">
+            <div class="d-flex justify-content-center pt-4">
+                <img src="${value.image}" class="card-img-top w-50 img-fluid" alt="...">
+            </div>
+            <div class="card-body text-center py-4">
+                <h4 class="card-title fw-bold">${value.phone_name}</h4>
+                <a class="btn btn-dark mt-2" onclick="loadDetails('${value.slug}')">Explore</a>
+            </div>
+            <div class="card-footer bg-brand text-center border-0">
+                <h6 class="card-title">Brand: ${value.brand}</h6>
+            </div>
+        </div>`;
+
+    // append card column in the card container
+    container.appendChild(colDiv);
+};
+
+
+// function to create & show phone details
 const showDetails = value => {
+    // create details container
     const container = document.getElementById('detailsContainer');
 
+    // create details row
     const rowDiv = document.createElement('div');
     rowDiv.classList.add('row', 'g-0');
 
+    // create details details (image, name, release date, brand, chipset, display, storage, memory)
     rowDiv.innerHTML = `
         <div class="col-md-4 bg-light p-3 d-flex justify-content-center">
             <img src="${value.image ? value.image : 'No valid data'}" class="img-fluid" alt="Phone image">
@@ -90,55 +124,11 @@ const showDetails = value => {
         </div>
     `;
 
-    const divBottom = document.createElement('div');
-    divBottom.classList.add('col-md-12', 'pb-3', 'px-3');
-
-    const cardBody = document.createElement('div');
-    cardBody.classList.add('card-body');
-
-    const otherInfoTable = document.createElement('table');
-    otherInfoTable.classList.add('table', 'table-striped');
-
-    const tBody = document.createElement('tbody');
-
-    // show sensor information
-    const sensors = value.mainFeatures.sensors.join(', ');
-    const sensorRow = document.createElement('tr');
-
-    sensorRow.innerHTML = `
-        <th scope="row">Sensors:</th>
-        <td>${sensors}</td>
-    `;
-    tBody.appendChild(sensorRow);
-
-    // check existance of phone other information 
-    if (value.others) {
-        // show phone other information depends on object length
-        Object.keys(value.others).forEach(objKey => {
-            const tblRow = document.createElement('tr');
-
-            const tblHeader = document.createElement('th');
-            const thValue = document.createTextNode(`${objKey}:`);
-
-            const tblData = document.createElement('td');
-            const tdValue = document.createTextNode(`${value.others[objKey]}`);
-
-            tblData.appendChild(tdValue);
-            tblHeader.appendChild(thValue);
-
-            tblRow.appendChild(tblHeader);
-            tblRow.appendChild(tblData);
-
-            tBody.appendChild(tblRow);
-        });
-    }
-
-    otherInfoTable.appendChild(tBody);
-    cardBody.appendChild(otherInfoTable);
-    divBottom.appendChild(cardBody);
-
     // append phone details(image, name, release date, brand, chipset, display, storage, memory)
     container.appendChild(rowDiv);
+
+    // create sensors and other information table div
+    const divBottom = showSensorsAndOtherInfo(value);
 
     // append phone details(sensors, other information)
     container.appendChild(divBottom);
@@ -150,26 +140,88 @@ const showDetails = value => {
     window.scroll({ top: 0, left: 0 });
 };
 
-// create search result cards
-const createResultCard = value => {
-    const container = document.getElementById('resultContainer');
-    const colDiv = document.createElement('div');
 
-    colDiv.innerHTML = `
-        <div class="card h-100 shadow border-0 rounded">
-            <div class="d-flex justify-content-center pt-4">
-                <img src="${value.image}" class="card-img-top w-50 img-fluid" alt="...">
-            </div>
-            <div class="card-body text-center py-4">
-                <h4 class="card-title fw-bold">${value.phone_name}</h4>
-                <a class="btn btn-dark mt-2" onclick="loadDetails('${value.slug}')">Explore</a>
-            </div>
-            <div class="card-footer bg-brand text-center border-0">
-                <h6 class="card-title">Brand: ${value.brand}</h6>
-            </div>
-        </div>`;
-    container.appendChild(colDiv);
-};
+// function to create phone sensors and other information table div
+const showSensorsAndOtherInfo = phoneValue => {
+    // create another details div under phone image
+    const divBottom = document.createElement('div');
+    divBottom.classList.add('col-md-12', 'pb-3', 'px-3');
+
+    // create another details body div under phone image
+    const cardBody = document.createElement('div');
+    cardBody.classList.add('card-body');
+
+    // create second details table under phone image
+    const otherInfoTable = document.createElement('table');
+    otherInfoTable.classList.add('table', 'table-striped');
+
+    // create table body for sensors and other information
+    const tBody = document.createElement('tbody');
+
+    // check sensors information existance
+    if (phoneValue.mainFeatures.sensors) {
+        // create sensor information row
+        const sensorRow = createSensorsRow(phoneValue);
+
+        // append sensor row in the table body
+        tBody.appendChild(sensorRow);
+    }
+
+    // check existance of phone other information 
+    if (phoneValue.others) {
+        // create phone other information rows depends on object length
+        Object.keys(phoneValue.others).forEach(objKey => {
+            const tblRow = document.createElement('tr');
+
+            const tblHeader = document.createElement('th');
+            // get object key
+            const thValue = document.createTextNode(`${objKey}:`);
+
+            const tblData = document.createElement('td');
+            // get object value
+            const tdValue = document.createTextNode(`${phoneValue.others[objKey]}`);
+
+            // append object value as table data
+            tblData.appendChild(tdValue);
+            // append object key as table header
+            tblHeader.appendChild(thValue);
+            // append table header and data to the row
+            tblRow.appendChild(tblHeader);
+            tblRow.appendChild(tblData);
+
+            // append table row to the table body
+            tBody.appendChild(tblRow);
+        });
+    }
+
+    // append sensors and other information rows in the table body
+    otherInfoTable.appendChild(tBody);
+
+    // append sensors and other information in the table and details body
+    cardBody.appendChild(otherInfoTable);
+    divBottom.appendChild(cardBody);
+
+    // return sensors and other details table div to append in the details container
+    return divBottom;
+}
+
+
+// function to create sensors row
+const createSensorsRow = phoneValue => {
+    // join sensor values from sensors array
+    const sensors = phoneValue.mainFeatures.sensors.join(', ');
+
+    // create sensor row
+    const sensorRow = document.createElement('tr');
+    sensorRow.innerHTML = `
+        <th scope="row">Sensors:</th>
+        <td>${sensors}</td>
+    `;
+
+    // return sensor row to append in the table body
+    return sensorRow;
+}
+
 
 // get search box input
 document.getElementById('searchBtn').addEventListener('click', function () {
