@@ -35,17 +35,28 @@
     <main>
         <section class="main-body py-5 px-2">
             <div class="container">
-                <!-- Search input field -->
+                <!-- Search input box -->
                 <div class="row row-cols-1">
                     <div class="col text-center">
                         <h1 class="fw-normal">Find Your Next <span class="fw-bolder brand-text">Phone</span></h1>
                     </div>
                     <div class="col mt-2">
+                        <!-- Search input field with button -->
                         <div class="input-group searchBox w-50 mx-auto">
                             <input type="text" class="form-control py-2" id="searchField"
                                 placeholder="Input phone name to search....">
                             <button class="btn btn-brand" type="button" id="searchBtn"><i
                                     class="fas fa-search"></i></button>
+                        </div>
+
+                        <!-- Search error message -->
+                        <div id="errorMessage" class="text-danger text-center mt-2">
+                            <p>Please input a valid phone name to search!</p>
+                        </div>
+
+                        <!-- Search result error message -->
+                        <div id="noResultsErrorMessage" class="text-danger text-center mt-3">
+                            <h5>No results found! Please try a different phone name</h5>
                         </div>
                     </div>
                 </div>

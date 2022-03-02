@@ -11,15 +11,26 @@ const getResult = searchKeyword => {
 
 // show search results
 const showResults = resultDatabase => {
-    // hide phone details container for every search
-    document.getElementById('detailsContainer').style.display = "none";
+    // check search results is empty or not
+    if (resultDatabase.length != 0) {
+        // hide search result error message before showing the results
+        document.getElementById('noResultsErrorMessage').style.display = "none";
 
-    // clear previous search results before displaying new search result
-    document.getElementById('resultContainer').textContent = "";
+        // hide phone details container for every search
+        document.getElementById('detailsContainer').style.display = "none";
 
-    // show only first twenty search results
-    const twentyResults = resultDatabase.slice(0, 20);
-    twentyResults.forEach(createResultCard);
+        // clear previous search results before displaying new search result
+        document.getElementById('resultContainer').textContent = "";
+
+        // show only first twenty search results
+        const twentyResults = resultDatabase.slice(0, 20);
+        twentyResults.forEach(createResultCard);
+    }
+    // activate search result error message
+    else {
+        document.getElementById('noResultsErrorMessage').style.display = "block";
+    }
+
 };
 
 // fetch phone details
@@ -43,35 +54,35 @@ const showDetails = value => {
 
     rowDiv.innerHTML = `
         <div class="col-md-4 bg-light p-3 d-flex justify-content-center">
-            <img src="${value.image}" class="img-fluid" alt="Phone image">
+            <img src="${value.image ? value.image : 'No valid data'}" class="img-fluid" alt="Phone image">
         </div>
         <div class="col-md-8 pt-3 px-3">
             <div class="card-body">
-                <h3 class="card-title fw-bold">${value.name}</h3>
+                <h3 class="card-title fw-bold">${value.name ? value.name : "No valid data"}</h3>
                 <p class="card-text">
-                    <small class="text-muted">Release Date: ${value.releaseDate}</small>
+                    <small class="text-muted">Release Date: ${value.releaseDate ? value.releaseDate : "No valid data"}</small>
                 </p>
                 <table class="table table-striped">
                     <tbody>
                         <tr>
                             <th scope="row">Brand:</th>
-                            <td>${value.brand}</td>
+                            <td>${value.brand ? value.brand : "No valid data"}</td>
                         </tr>
                         <tr>
                             <th scope="row">Display Size:</th>
-                            <td>${value.mainFeatures.displaySize}</td>
+                            <td>${value.mainFeatures.displaySize ? value.mainFeatures.displaySize : "No valid data"}</td>
                         </tr>
                         <tr>
                             <th scope="row">ChipSet:</th>
-                            <td>${value.mainFeatures.chipSet}</td>
+                            <td>${value.mainFeatures.chipSet ? value.mainFeatures.chipSet : "No valid data"}</td>
                         </tr>
                         <tr>
                             <th scope="row">Storage:</th>
-                            <td>${value.mainFeatures.storage}</td>
+                            <td>${value.mainFeatures.storage ? value.mainFeatures.storage : "No valid data"}</td>
                         </tr>
                         <tr>
                             <th scope="row">Memory:</th>
-                            <td>${value.mainFeatures.memory}</td>
+                            <td>${value.mainFeatures.memory ? value.mainFeatures.memory : "No valid data"}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -163,5 +174,14 @@ const createResultCard = value => {
 // get search box input
 document.getElementById('searchBtn').addEventListener('click', function () {
     const searchKeyword = document.getElementById('searchField').value;
-    getResult(searchKeyword);
+    // fetch data only when search box has a value 
+    if (searchKeyword) {
+        document.getElementById('errorMessage').style.display = "none";
+        getResult(searchKeyword);
+    }
+
+    // show an error message if the search box is empty
+    else {
+        document.getElementById('errorMessage').style.display = "block";
+    }
 });

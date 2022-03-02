@@ -21,8 +21,10 @@ body {
   background-color: #232323;
   color: #ffffff;
 }
-/* Hide details container */
-#detailsContainer {
+/* Hide error messages & details container by default */
+#detailsContainer,
+#errorMessage,
+#noResultsErrorMessage {
   display: none;
 }
 /* Responsive styles for tab and mobile */
